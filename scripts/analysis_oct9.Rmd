@@ -1,0 +1,400 @@
+---
+title: "oct9 analysis"
+author: "Sarah Dimakis"
+date: "October 9, 2019"
+output: word_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(rio)
+mturk <- import("mturk_oct9.csv")
+
+```
+
+
+```{r}
+#pca emotions
+library(stats)
+library(tidyverse)
+
+emotions <- mturk %>% select(c(Interested, Distressed, Afraid, Guilty, Angry, Disgusted, Happy, Sad, Anxious, Calm, Surprised, Upset))
+
+pca <- princomp(emotions, cor = TRUE, scores= TRUE)
+
+summary(pca)
+pca$loadings[,1:3]
+
+pca$scores[,1:3]
+mturk$anger_component_pca <- pca$scores[,1]
+mturk$fear_component_pca <- pca$scores[,2]
+mturk$neutral_component_pca <- pca$scores[,3]
+
+library(psych)
+
+observed.cor <- data.frame(cor(emotions, use = "pairwise.complete.obs"))
+
+#orthogonal rotation
+pca.var = psych::principal(observed.cor, rotate = "varimax", nfactors = 3, missing = TRUE, scores = TRUE)
+summary(pca.var)
+pca.var$loadings
+
+
+pca.pro <- principal(observed.cor, rotate = "promax", nfactors = 3, missing = TRUE)
+summary(pca.pro)
+pca.pro$loadings
+```
+
+
+```{r}
+#creating the anger component
+# items <- c("Guilty", "Angry", "Disgusted", "Sad", "Upset")
+# scaleKey <- c(1,1,1,1,1)
+# 
+# angry <- scoreItems(keys = scaleKey, items = mturk[items], 
+#   totals = FALSE, missing = FALSE, min = 0, 
+#                 max = 100)
+# mturk <- mturk %>% mutate(Anger_component = angry$scores[,1])
+# 
+# 
+# #creating the fear component
+# items <- c("Distressed", "Afraid", "Anxious", "Surprised")
+# scaleKey <- c(1,1,1,1)
+# 
+# fear <- scoreItems(keys = scaleKey, items = mturk[items], 
+#   totals = FALSE, missing = FALSE, min = 0, 
+#                 max = 100)
+# mturk <- mturk %>% mutate(Fear_component = fear$scores[,1])
+# 
+# 
+# #creating the neutral component
+# items <- c("Interested", "Happy", "Calm")
+# scaleKey <- c(1,1,1)
+# 
+# neutral <- scoreItems(keys = scaleKey, items = mturk[items], 
+#   totals = FALSE, missing = FALSE, min = 0, 
+#                 max = 100)
+# mturk <- mturk %>% mutate(Neutral_component = neutral$scores[,1])
+# 
+
+```
+
+```{r}
+emotions_spss <- cbind(mturk$anger_comp_spss, mturk$fear_comp_spss, mturk$neutral_comp_spss)
+options(scipen = 999)
+cor(emotions_spss) %>% round(2)
+
+model<-lm(data=mturk, Homelessness_j_component~anger_comp_spss+fear_comp_spss+neutral_comp_spss+Policy_complexity)
+summary(model)
+
+model<-lm(data=mturk, Policy_j_component~anger_comp_spss+fear_comp_spss+neutral_comp_spss+Policy_complexity)
+summary(model)
+```
+
+
+```{r}
+#interaction model issue
+model2<-lm(data=mturk, Homelessness_j_component~anger_comp_spss*Policy_complexity+fear_comp_spss*Policy_complexity+neutral_comp_spss*Policy_complexity)
+summary(model2)
+library(lmSupport)
+modelCompare(model, model2)
+model<-lm(data=mturk, Policy_j_component~anger_comp_spss*Policy_complexity+fear_comp_spss*Policy_complexity+neutral_comp_spss*Policy_complexity)
+summary(model)
+
+model_1_coll_diags <- ols_coll_diag(model)
+model_1_coll_diags$vif_t
+
+```
+
+
+```{r}
+#do interactions in the model improve model?
+
+model_1<-lm(data=mturk, Homelessness_j_component~anger_comp_spss+fear_comp_spss+neutral_comp_spss+Policy_complexity)
+summary(model_1)
+
+model_2<-lm(data=mturk, Homelessness_j_component~anger_comp_spss*Policy_complexity+fear_comp_spss*Policy_complexity+neutral_comp_spss*Policy_complexity)
+summary(model_2)
+
+library(lmSupport)
+modelCompare(model_1, model_2)
+```
+
+```{r}
+library(lmSupport)
+#does emotion + policy simplicity predict issue judgments above and beyond individual difference measures?
+
+model_1 <- lm(data=mturk, Homelessness_j_component ~ Extraversion + Agreeableness + Conscientiousness +
+                Openness_to_experiences + Emotional_stability+ NFC + Cognitive_reappraisal + SEC_conservatism +
+                Gender + Age)
+summary(model_1) #r2 = .30
+
+
+model_3 <- lm(data=mturk, Homelessness_j_component ~ anger_comp_spss*Policy_complexity +
+                fear_comp_spss*Policy_complexity + 
+                neutral_comp_spss*Policy_complexity +  Extraversion + Agreeableness + Conscientiousness +
+                Openness_to_experiences + Emotional_stability + NFC + Cognitive_reappraisal + SEC_conservatism +
+                Gender + Age)
+
+
+summary(model_3) #r2 = .37
+
+library(lmSupport)
+modelCompare(model_1,model_3)
+
+```
+
+
+```{r}
+#does emotion + policy simplicity predict policy judgments above and beyond individual difference measures?
+
+model_1 <- lm(data=mturk, Policy_j_component ~ Extraversion + Agreeableness + Conscientiousness +
+                Openness_to_experiences + Emotional_stability+ NFC + Cognitive_reappraisal + SEC_conservatism +
+                Gender + Age)
+summary(model_1) #r2 = .30
+
+
+model_2 <- lm(data=mturk, Policy_j_component ~ anger_comp_spss*Policy_complexity +
+                fear_comp_spss*Policy_complexity + 
+                neutral_comp_spss*Policy_complexity +  Extraversion + Agreeableness + Conscientiousness +
+                Openness_to_experiences + Emotional_stability + NFC + Cognitive_reappraisal + SEC_conservatism +
+                Gender + Age)
+
+
+library(olsrr)
+model_1_coll_diags <- ols_coll_diag(model_2)
+model_1_coll_diags$vif_t
+
+
+summary(model_2) #r2 = .37
+
+
+
+library(lmSupport)
+modelCompare(model_1,model_2)
+```
+
+
+```{r}
+
+ggplot(data=mturk, aes(y=Policy_j_component,x=anger_comp_spss, color= Policy_complexity)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Anger component", y="Policy judgment", title="Policy judgments when angry", subtitle= "for simple and complex policies")
+
+ggplot(data=mturk, aes(y=Policy_j_component,x=fear_comp_spss, color= Policy_complexity)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Fear component", y="Policy judgment", title="Policy judgments when afraid", subtitle= "for simple and complex policies")
+
+ggplot(data=mturk, aes(y=Policy_j_component,x=neutral_comp_spss, color= Policy_complexity))+
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Positive affect component", y="Policy judgment", title="Policy judgments when pleased", subtitle= "for simple and complex policies")
+```
+
+
+```{r}
+ggplot(data=mturk, aes(y=Homelessness_j_component,x=anger_comp_spss, color=Policy_complexity))+
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Anger component", y="Issue judgment", title="Issue judgments when angry", subtitle= "for simple and complex policies")
+
+ggplot(data=mturk, aes(y=Homelessness_j_component,x=fear_comp_spss, color=Policy_complexity))+
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Fear component", y="Issue judgment", title="Issue judgments when afraid", subtitle= "for simple and complex policies")
+
+
+ggplot(data=mturk, aes(y=Homelessness_j_component,x=neutral_comp_spss,color=Policy_complexity))+
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Neutral component", y="Issue judgment", title="Issue judgments when pleased", subtitle= "for simple and complex policies")
+
+
+```
+
+
+```{r}
+ggplot(data=mturk, aes(y=Policy_j_component,x=anger_comp_spss)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Anger component", y="Policy judgment", title= "Policy judgments when angry")
+  
+ggplot(data=mturk, aes(y=Policy_j_component,x=fear_comp_spss)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Fear component", y="Policy judgment", title= "Policy judgments when afraid")
+
+ggplot(data=mturk, aes(y=Policy_j_component,x=neutral_comp_spss)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Neutral component", y="Policy judgment", title= "Policy judgments when pleased")
+
+```
+
+
+```{r}
+ggplot(data=mturk, aes(y=Homelessness_j_component,x=anger_comp_spss)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Anger component", y="Issue judgment", title= "Issue judgments when angry")
+  
+ggplot(data=mturk, aes(y=Homelessness_j_component,x=fear_comp_spss)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Fear component", y="Issue judgment", title= "Issue judgments when afraid")
+
+ggplot(data=mturk, aes(y=Homelessness_j_component,x=neutral_comp_spss)) +
+  geom_smooth(se =FALSE, method = "lm", size =1.5) +
+  geom_point() +
+  theme_classic() +
+  labs(x="Neutral component", y="Issue judgment", title= "Issue judgments when pleased")
+
+```
+
+
+```{r}
+#was the emotion induction successful?
+
+#does anger condition induce anger component?
+mturk$Emotion <- as.factor(mturk$Emotion)
+fear <- c(0, 1, 0) #dummy code for anger vs. fear
+neutral <- c(0, 0, 1) #dummy code for anger vs. neutral
+
+dummy_codes <- cbind(fear, neutral)
+
+contrasts(mturk$Emotion) <- dummy_codes
+
+model_anger <- lm(anger_comp_spss~Emotion, data = mturk) 
+summary(model_anger)
+#significantly different than neutral...
+
+
+
+#does fear condition induce fear component?
+anger <- c(1, 0, 0) #dummy code for anger vs. fear
+
+dummy_codes <- cbind(anger, neutral)
+
+contrasts(mturk$Emotion) <- dummy_codes
+
+model_fear <- lm(fear_comp_spss~Emotion, data = mturk)
+summary(model_fear)
+
+#does neutral condition 'induce' positive component?
+dummy_codes <- cbind(anger, fear)
+
+contrasts(mturk$Emotion) <- dummy_codes
+
+model_neutral <- lm(neutral_comp_spss~Emotion, data=mturk)
+summary(model_neutral)
+
+#boxplots
+plot_data <- mturk %>% select(anger_comp_spss, fear_comp_spss, neutral_comp_spss, Emotion)
+head(plot_data)
+
+plot_data <- plot_data %>% gather("Emotion felt", "Emotional intensity", c(1,2,3))
+head(plot_data)
+
+plot_data[plot_data=="anger_comp_spss"]<-"Anger felt"
+plot_data[plot_data=="fear_comp_spss"]<-"Fear felt"
+plot_data[plot_data=="neutral_comp_spss"]<-"Positive affect felt"
+
+means <- aggregate(`Emotional intensity` ~  Emotion*`Emotion felt`, plot_data, mean)
+means$`Emotional intensity` <- means$`Emotional intensity` %>% round(2)
+  
+
+
+ggplot(plot_data, aes(x = `Emotion`, y = `Emotional intensity`, fill=Emotion)) +
+  geom_boxplot() +
+  theme_classic() +
+  labs(x= "Emotion induction group (video)", y= "Emotion intensity (self report)") +
+  facet_grid(~`Emotion felt`) +
+  geom_text(data=means, aes(label=`Emotional intensity`, y=`Emotional intensity` + .08), size =3)
+  
+```
+
+
+```{r}
+#these are the null models if you use emotion conditions
+mturk <- mturk %>% mutate(Emotion = as.factor(Emotion))
+contrasts(mturk$Emotion) 
+Fear <- c(0,1,0)
+Neutral<-c(0,0,1)
+dummy_codes <- cbind(Fear, Neutral)
+contrasts(mturk$Emotion)  <- dummy_codes
+
+model_5 <- lm(data=mturk, Policy_j_component~Emotion*Policy_complexity)
+summary(model_5)
+
+model_6 <- lm(data=mturk, Homelessness_j_component~Emotion*Policy_complexity)
+summary(model_6)
+```
+
+
+```{r}
+#this shows that the interactions don't improve the model p = .336
+model_7 <- lm(data=mturk, Policy_j_component ~ anger_component_pca*Policy_complexity +fear_component_pca*Policy_complexity+
+                neutral_component_pca*Policy_complexity)
+summary(model_7)
+
+model_8 <- lm(data=mturk, Policy_j_component ~ anger_component_pca +fear_component_pca+ neutral_component_pca +Policy_complexity)
+summary(model_8)
+
+modelCompare(model_8,model_7) 
+
+
+#the interaction marginally improves the model for issue judgments
+model_7 <- lm(data=mturk, Homelessness_j_component ~ anger_component_pca*Policy_complexity +fear_component_pca*Policy_complexity+
+                neutral_component_pca*Policy_complexity)
+summary(model_7)
+
+model_8 <- lm(data=mturk, Homelessness_j_component ~ anger_component_pca +fear_component_pca+ neutral_component_pca +Policy_complexity)
+summary(model_8)
+
+modelCompare(model_8,model_7)  
+
+```
+
+```{r}
+#Predicting what made people more likely to be afraid/ angry
+
+model_9 <- lm(data = mturk, anger_component_pca ~ Extraversion + Agreeableness + Conscientiousness +
+                Openness_to_experiences + NFC + Cognitive_reappraisal + SEC_conservatism +
+                Gender + Age)
+summary(model_9)
+
+
+model_10 <- lm(data = mturk, fear_component_pca ~ Extraversion + Agreeableness + Conscientiousness +
+                Openness_to_experiences + NFC + Cognitive_reappraisal + SEC_conservatism +
+                Gender + Age)
+summary(model_10)
+
+```
+
+
+```{r}
+#october 12th
+
+
+m1 <- lm(data = mturk, Policy_j_component ~ Negative_affect*Policy_complexity)
+summary(m1)
+
+
+m1 <- lm(data = mturk, Homelessness_j_component ~ Negative_affect*Policy_complexity)
+summary(m1)
+
+```

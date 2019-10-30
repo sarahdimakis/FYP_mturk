@@ -1,0 +1,493 @@
+---
+title: "Analysis 10/3"
+author: "Sarah Dimakis"
+date: "October 3, 2019"
+output: word_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(rio)
+library(tidyverse)
+
+mturk <- import("FYP_mturk_Dimakis.csv")
+```
+
+
+```{r}
+#removing participants who did the survey too quickly
+
+mturk <- mturk %>% filter(Video_DO == 'V1' & Duration >316 | Video_DO == 'V2' & Duration > 340 | Video_DO == 'V3' & Duration > 398 |
+                         Video_DO == 'V4' & Duration > 666 | Video_DO == 'V5' & Duration > 565 | Video_DO == 'V6' & Duration > 538)
+
+mturk <- mturk %>% filter(Duration < 5000)
+
+```
+
+```{r}
+#descriptives 
+library(knitr)
+
+mturk %>% group_by(Gender) %>% summarize(n = n()) %>% kable()
+
+mean(mturk$Age) #40.4
+range(mturk$Age) #20-68
+
+mturk %>% group_by(Ethnicity) %>% summarize(n =n()) %>% kable()
+#77.6% white, 7.5% black, 5.2% asian
+
+mturk %>% group_by(Political_orientation) %>% summarize(n =n()) %>% kable()
+#lean liberal 66, lean conservative 31, moderate 37
+
+mturk %>% group_by(Political_affiliation) %>% summarize(n =n()) %>% kable()
+#democrats 59, republicans 31
+
+```
+
+```{r}
+#pca emotions
+library(stats)
+
+emotions <- mturk %>% select(c(Interested, Distressed, Afraid, Guilty, Angry, Disgusted, Happy, Sad, Anxious, Calm, Surprised, Upset))
+pca <- princomp(emotions, cor = TRUE)
+
+summary(pca)
+
+pca$scores[,1:3]
+mturk$anger_component_pca <- pca$scores[,1]
+mturk$fear_component_pca <- pca$scores[,2]
+mturk$neutral_component_pca <- pca$scores[,3]
+
+
+library(OpenMx)
+library(psych)
+
+observed.cor <- data.frame(cor(emotions, use = "pairwise.complete.obs"))
+
+pca.var = principal(observed.cor, rotate = "varimax", nfactors = 3, missing = TRUE)
+summary(pca.var)
+pca.var$loadings
+
+pca.pro <- principal(observed.cor, rotate = "promax", nfactors = 3, missing = TRUE, scores = "regression")
+summary(pca.pro)
+pca.pro$loadings
+
+pca.pro$scores
+
+```
+
+
+```{r}
+#pca outcome variables
+outcome <- mturk %>% select(c(Importance, New_legislation,Vote_policy, Good_solution, Reasonable_cost, Politically_possible, Reduce_problem, Solve_problem, Morally_justifiable, Policy_pleased))
+
+pca <- princomp(outcome, cor = TRUE)
+summary(pca)
+
+observed.cor <- data.frame(cor(outcome, use = "pairwise.complete.obs"))
+
+pca.var = principal(observed.cor, rotate = "varimax", nfactors = 2, missing = TRUE)
+summary(pca.var)
+pca.var$loadings
+
+pca.pro <- principal(observed.cor, rotate = "promax", nfactors = 2, missing = TRUE)
+summary(pca.pro)
+pca.pro$loadings
+
+```
+
+```{r}
+#creating the anger component
+items <- c("Guilty", "Angry", "Disgusted", "Sad", "Upset")
+scaleKey <- c(1,1,1,1,1)
+
+angry <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+mturk <- mturk %>% mutate(Anger_component = angry$scores[,1])
+
+
+#creating the fear component
+items <- c("Distressed", "Afraid", "Anxious", "Surprised")
+scaleKey <- c(1,1,1,1)
+
+fear <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+mturk <- mturk %>% mutate(Fear_component = fear$scores[,1])
+
+
+#creating the neutral component
+items <- c("Interested", "Happy", "Calm")
+scaleKey <- c(1,1,1)
+
+neutral <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+mturk <- mturk %>% mutate(Neutral_component = neutral$scores[,1])
+
+
+```
+
+
+```{r}
+#Calculating the social and economic conservationism scale (SECs)
+
+items <- c("SEC_abortion", "SEC_limited_govt", "SEC_security", "SEC_religion","SEC_welfare", "SEC_gun", "SEC_trad_marriage", "SEC_trad_values","SEC_fiscal_resp", "SEC_business", "SEC_family_unit", "SEC_patriotism")
+
+#econonmic conservatism subscale 
+scaleKey <- c(0, 1, 0, 0, -1, 1, 0, 0, 1, 1, 0, 0)
+
+economic <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+
+mturk <- mturk %>% mutate(SEC_economic_conservatism = economic$scores[,1])
+
+#social conservatism subscale
+scaleKey <- c(-1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1)
+
+social <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+
+mturk <- mturk %>% mutate(SEC_social_conservatism = social$scores[,1])
+
+
+#conservatism
+scaleKey <- c(-1, 1, 1, 1, -1, 1, 1, 1, 1, 1, 1, 1)
+
+conservatism <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+
+mturk <- mturk %>% mutate(SEC_conservatism = conservatism$scores[,1])
+
+```
+
+```{r}
+#Calculating big 5 traits
+
+items <- c("B5_1", "B5_2", "B5_3", "B5_4", "B5_5", "B5_6", "B5_7", "B5_8", "B5_9", "B5_10")
+
+#Extraversion
+scaleKey <- c(1, 0, 0, 0, 0, -1, 0, 0, 0, 0)
+
+extraversion <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 7)
+mturk <- mturk %>% mutate(Extraversion = extraversion$scores[,1])
+
+
+#Agreeableness
+scaleKey <- c(0, -1, 0, 0, 0, 0, 1, 0, 0, 0)
+
+agree <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 7)
+mturk <- mturk %>% mutate(Agreeableness = agree$scores[,1])
+
+
+#Conscientiousness
+scaleKey <- c(0, 0, 1, 0, 0, 0, 0, -1, 0, 0)
+
+consc <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 7)
+mturk <- mturk %>% mutate(Conscientiousness = consc$scores[,1])
+
+
+#Emotional stability
+scaleKey <- c(0, 0, 0, -1, 0, 0, 0, 0, 1, 0)
+
+emo <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 7)
+
+mturk <- mturk %>% mutate(Emotional_stability = emo$scores[,1])
+
+#Openness to experiences
+scaleKey <- c(0, 0, 0, 0, 5, 0, 0, 0, 0, -1)
+
+open <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 7)
+
+mturk <- mturk %>% mutate(Openness_to_experiences = open$scores[,1])
+
+
+```
+
+
+```{r}
+#need for cognition
+
+#no 14 because it was an attention check
+
+items <- c("NFC_1", "NFC_2", "NFC_3","NFC_4","NFC_5","NFC_6","NFC_7","NFC_8","NFC_9","NFC_10","NFC_11", "NFC_12", "NFC_13", "NFC_15", "NFC_16", "NFC_17", "NFC_18", "NFC_19")
+
+scaleKey <- c(1, 1, -1, -1, -1, 1, -1, -1, -1, 1, 1, -1, 1, 1, 1, -1, -1, 1)
+
+nfc <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 5)
+mturk$NFC <- nfc$scores
+mturk <- mturk %>% mutate(NFC = nfc$scores[,1])
+
+
+```
+
+```{r}
+#emotional regulation
+
+#cognitive reappraisal subscale
+items <- c("ER_1","ER_2", "ER_3", "ER_4", "ER_5", "ER_6",
+           "ER_7", "ER_9", "ER_10", "ER_11")
+scaleKey <- c(1,0,1,0,1,0,1,1,0,1)
+
+ca <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 5)
+
+mturk <- mturk %>% mutate(Cognitive_reappraisal = ca$scores[,1])
+
+
+#expressive suppression subscale
+scaleKey <- c(0,1,0,1,0,1,0,0,1,0)
+
+es <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 1, 
+                max = 5)
+mturk$Expressive_suppression <- es$scores
+mturk <- mturk %>% mutate(Expressive_suppression = es$scores[,1])
+
+
+```
+
+
+
+```{r}
+#Did the induction work?
+
+#does anger condition induce anger component?
+mturk$Emotion <- as.factor(mturk$Emotion)
+fear <- c(0, 1, 0) #dummy code for anger vs. fear
+neutral <- c(0, 0, 1) #dummy code for anger vs. neutral
+
+dummy_codes <- cbind(fear, neutral)
+
+contrasts(mturk$Emotion) <- dummy_codes
+
+model_anger <- lm(Anger_component~Emotion, data = mturk) 
+summary(model_anger)
+#significantly more than neutral, but not more than fear
+
+
+
+#does fear condition induce fear component?
+anger <- c(1, 0, 0) #dummy code for anger vs. fear
+neutral <- c(0, 0, 1) #dummy code for neutral vs. fear
+
+dummy_codes <- cbind(anger, neutral)
+
+contrasts(mturk$Emotion) <- dummy_codes
+
+model_fear <- lm(Fear_component~Emotion, data = mturk)
+summary(model_fear)
+#significantly more than neutral, but not more than anger
+
+
+#does neutral condition 'induce' positive component?
+
+dummy_codes <- cbind(anger, fear)
+
+contrasts(mturk$Emotion) <- dummy_codes
+
+model_neutral <- lm(Neutral_component~Emotion, data=mturk)
+summary(model_neutral)
+#yes... more positive in the neutral condition than the fear/anger conditions
+
+```
+
+
+```{r}
+#creating homelessness judgment component
+items <- c("Importance", "New_legislation")
+scaleKey <- c(1,1)
+
+hj <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+mturk <- mturk %>% mutate(Homelessness_j_component = hj$scores[,1])
+
+#creating policy judgment component
+items <- c("Vote_policy", "Good_solution", "Reasonable_cost", "Politically_possible", "Reduce_problem", "Solve_problem",
+           "Morally_justifiable", "Policy_pleased")
+scaleKey <- c(1,1,1,1,1,1,1,1)
+
+pj <- scoreItems(keys = scaleKey, items = mturk[items], 
+  totals = FALSE, missing = FALSE, min = 0, 
+                max = 100)
+mturk <- mturk %>% mutate(Policy_j_component = pj$scores[,1])
+
+```
+
+```{r}
+model <- lm(data=mturk, Policy_j_component~Anger_component+Fear_component+Neutral_component)
+summary(model)
+
+
+model <- lm(data=mturk, Homelessness_j_component~anger_component_pca+fear_component_pca+neutral_component_pca)
+summary(model)
+
+
+
+model <- lm(data=mturk,
+            Homelessness_j_component~Anger_component+Fear_component+Neutral_component)
+summary(model)
+
+model <- lm(data=mturk, Homelessness_j_component~Emotion)
+summary(model)
+
+mturk$Policy_complexity <- as.factor(mturk$Policy_complexity)
+mturk$Policy_complexity
+contrasts(mturk$Policy_complexity)
+
+model <- lm(data=mturk, Homelessness_j_component~Fear_component*Policy_complexity)
+summary(model)
+
+model <- lm(data=mturk, Homelessness_j_component~Anger_component*Policy_complexity)
+summary(model)
+
+model <- lm(data=mturk, Homelessness_j_component~Neutral_component*Policy_complexity)
+summary(model)
+```
+
+
+```{r}
+mturk$Negative_affect <- ifelse(mturk$Emotion == "Neutral", "Positive", "Negative")
+model <- lm(data=mturk, Policy_j_component~Negative_affect*Policy_complexity+SEC_conservatism)
+summary(model)
+library(psych)
+
+mturk %>% group_by(Policy_DO) %>% summarize(m_pol_j <- mean(Policy_j_component))
+
+mturk %>% group_by(Video_DO) %>% summarize(mean(Policy_j_component))
+
+mturk %>% group_by(Emotion) %>% summarize(mean(Policy_j_component))
+
+```
+
+
+```{r}
+model <- lm(data=mturk, Policy_j_component~Negative_affect*Policy_complexity)
+summary(model)
+
+
+```
+
+```{r}
+cor(mturk$Anger_component,mturk$Neutral_component)
+cor(mturk$Neutral_component,mturk$Fear_component)
+
+
+```
+
+```{r}
+library(broom)
+library(lmSupport)
+library(olsrr)
+
+
+model <- lm(data=mturk, Policy_j_component~Anger_component+Fear_component+Neutral_component)
+summary(model)
+
+mturk %>% select(Anger_component, Fear_component, Neutral_component) %>% cor()
+model_1_coll_diags <- ols_coll_diag(model)
+model_1_coll_diags$vif_t
+
+
+model_ang_fear <- lm(Anger_component ~ Fear_component,
+                    data = mturk)
+
+mturk$ang_residuals <- model_ang_fear$residuals
+
+model_2 <- lm(data=mturk, Policy_j_component~ang_residuals+Fear_component+Neutral_component)
+summary(model_2)
+
+model_1_coll_diags <- ols_coll_diag(model_2)
+model_1_coll_diags$vif_t
+
+
+
+```
+
+```{r}
+model_3 <- lm(data=mturk, Homelessness_j_component~Anger_component+Fear_component+Neutral_component)
+summary(model_3)
+
+model_4 <- lm(data=mturk, Homelessness_j_component~ang_residuals+Fear_component+Neutral_component)
+summary(model_4)
+
+```
+
+```{r}
+p1 <- ggplot(data = mturk, aes(x = Anger_component, y = Homelessness_j_component)) + 
+  geom_jitter(stat = "identity", size = 2) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(title = "Anger and issue importance judgment", 
+       y = "Issue importance", x = "Anger component")
+
+p2 <- ggplot(data = mturk, aes(x = Fear_component, y = Homelessness_j_component)) + 
+  geom_jitter(stat = "identity", size = 2) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(title = "Fear and issue importance judgment", 
+       y = "Issue importance", x = "Fear component")
+
+
+p3 <- ggplot(data = mturk, aes(x = Neutral_component, y = Homelessness_j_component)) + 
+  geom_jitter(stat = "identity", size = 2) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(title = "Positivity and issue importance judgment", 
+       y = "Issue importance", x = "Neutral component")
+library(Rmisc)
+
+multiplot(p1,p2,p3,cols=1)
+```
+
+```{r}
+p4 <- ggplot(data = mturk, aes(x = Anger_component, y = Policy_j_component)) + 
+  geom_jitter(stat = "identity", size = 2) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(title = "Anger and policy judgment", 
+       y = "Policy judgment", x = "Anger component")
+
+
+p5 <- ggplot(data = mturk, aes(x = Fear_component, y = Policy_j_component)) + 
+  geom_jitter(stat = "identity", size = 2) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(title = "Fear and policy judgment", 
+       y = "Policy judgment", x = "Fear component")
+
+
+p6 <- ggplot(data = mturk, aes(x = Neutral_component, y = Homelessness_j_component)) + 
+  geom_jitter(stat = "identity", size = 2) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(title = "Positivity and policy judgment", 
+       y = "Policy judgment", x = "Neutral component")
+
+multiplot(p1,p2,p3,p4, p5, p6,cols=2)
+```
+
+
+```{r}
+
+export(mturk, "mturk_oct9.csv")
+
+#did the emotion induction work? numbers
+
+dplyr::group_by(mturk, Emotion) %>% dplyr::summarize(Anger_comp =mean(Anger_component), Fear_comp =mean(Fear_component), Neutral_comp =mean(Neutral_component)) %>% kable()
+
+mean(mturk$Importance)
+```

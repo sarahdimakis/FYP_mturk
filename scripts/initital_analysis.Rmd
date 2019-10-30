@@ -1,0 +1,76 @@
+---
+title: "Initial analysis"
+author: "Sarah Dimakis"
+date: "September 26, 2019"
+output: word_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(rio)
+
+mturk <- import("FYP_mturk_Dimakis.csv")
+
+library(tidyverse)
+```
+
+
+```{r}
+library(knitr)
+
+mturk$Duration <- mturk$Duration %>% as.numeric()
+table1 <- mturk %>%  group_by(Video_DO) %>% summarize(n = n(),m = mean(Duration)) %>% kable()
+
+library(ggplot2)
+
+duration <- mturk[-c(203),]
+
+ggplot(data=duration, aes(duration$`Duration (in seconds)`)) + 
+  geom_histogram()
+
+par(mfrow=c(2,3))
+hist(duration$`Duration (in seconds)`[duration$Video_DO=="V1"])
+hist(duration$`Duration (in seconds)`[duration$Video_DO=="V2"])
+hist(duration$`Duration (in seconds)`[duration$Video_DO=="V3"])
+hist(duration$`Duration (in seconds)`[duration$Video_DO=="V4"])
+hist(duration$`Duration (in seconds)`[duration$Video_DO=="V5"])
+hist(duration$`Duration (in seconds)`[duration$Video_DO=="V6"])
+
+duration %>%  group_by(Video_DO) %>% summarize(n = n(),m = mean(`Duration (in seconds)`), sd = sd(`Duration (in seconds)`)) %>% kable()
+
+```
+
+```{r}
+anger <- duration %>% filter(Emotion == "Anger")
+fear <- duration %>% filter(Emotion == "Fear")
+neutral <- duration %>% filter(Emotion == "Neutral")
+
+v1 <- duration %>% filter(Video_DO=="V1")
+v2 <- duration %>% filter(Video_DO=="V2")
+v3 <- duration %>% filter(Video_DO=="V3")
+v4 <- duration %>% filter(Video_DO=="V4")
+v5 <- duration %>% filter(Video_DO=="V5")
+v6 <- duration %>% filter(Video_DO=="V6")
+
+v1_n <- v1 %>% filter(`Duration (in seconds)` > 316)
+v2_n <- v2 %>% filter(`Duration (in seconds)` > 340)
+v3_n <- v3 %>% filter(`Duration (in seconds)` > 398)
+v4_n <- v4 %>% filter(`Duration (in seconds)` > 666)
+v5_n <- v5 %>% filter(`Duration (in seconds)` > 565)
+v6_n <- v6 %>% filter(`Duration (in seconds)` > 538)
+
+table(duration$Political_orientation)
+table(duration$Political_affiliation)
+
+table(v1$E_interested:v1$E_upset)
+
+
+x <- duration %>% group_by(Video_DO) %>% summarize(angry = mean(as.numeric(E_angry)), fear = mean(as.numeric(E_afraid)), calm = mean(as.numeric(E_calm))) %>% kable()
+
+ 
+#select(E_interested:E_upset)
+#), E_distressed, E_afraid, E_guilty, E_angry, E_disgusted, E_happy, E_sad, E_anxious, E_calm, E_surprised)
+
+
+```
