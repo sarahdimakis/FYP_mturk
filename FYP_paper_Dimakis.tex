@@ -1,0 +1,285 @@
+\documentclass[man,draftall]{apa6}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={The different effect of anger and fear on political judgments},
+            pdfauthor={Sarah Dimakis},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+
+  \title{The different effect of anger and fear on political judgments}
+    \author{Sarah Dimakis\textsuperscript{1}}
+    \date{}
+  
+\shorttitle{ANGER AND FEAR ON POLITICAL JUDGMENTS}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} Univeristy of Oregon}
+\usepackage{csquotes}
+\usepackage{upgreek}
+\captionsetup{font=singlespacing,justification=justified}
+
+\usepackage{longtable}
+\usepackage{lscape}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{threeparttablex}
+
+\newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
+
+\makeatletter
+\newcommand\LastLTentrywidth{1em}
+\newlength\longtablewidth
+\setlength{\longtablewidth}{1in}
+\newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
+
+
+\DeclareDelayedFloatFlavor{ThreePartTable}{table}
+\DeclareDelayedFloatFlavor{lltable}{table}
+\DeclareDelayedFloatFlavor*{longtable}{table}
+\makeatletter
+\renewcommand{\efloat@iwrite}[1]{\immediate\expandafter\protected@write\csname efloat@post#1\endcsname{}}
+\makeatother
+
+\authornote{
+
+Correspondence concerning this article should be addressed to Sarah
+Dimakis, University of Oregon Department of Psychology. E-mail:
+\href{mailto:sdimakis@uoregon.edu}{\nolinkurl{sdimakis@uoregon.edu}}}
+
+\abstract{
+Insert abstract here.
+
+
+}
+
+\begin{document}
+\maketitle
+
+\section{Method}\label{method}
+
+\subsection{Participants}\label{participants}
+
+Two-hundred U.S. adults were recruited via Amazon Mechanical Turk to
+participate in a study listed as \enquote{Psychology and society
+survey.} Participants were removed for completing the survey quicker
+than predetermined time cutoffs or failing to pass attention checks,
+leaving 134 participants for analyses. Of the remaining 134
+participants, who were 20 to 68 years old (\emph{M} = 40.35, \emph{SD} =
+11.99), 53.7\% identified as female and 46.3\% identified as male, while
+77.6\% identified as White of Caucasian, 7.5\% as African American or
+Black, 6\% as Hispanic or Latinx, 5.2\% as Asian or Asian American,
+0.7\% as Native American, and 9.7\% as \enquote{Other.} The sample
+leaned liberal, with 44\% affiliated with the Democratic Party, 23.1\%
+affiliated with the Republican Party, and 9.7\% affiliated with the
+Green Party, Libertarian Party, or no party. The participants were
+compensated \$1.50 for completing the survey, which took on average less
+than 12 minutes.
+
+\subsection{Materials}\label{materials}
+
+\textbf{Emotion induction.} Affect was induced incidentally through
+video clips (Schaefer, Nils, Sanchex, \& Philippot, 2010). Six videos
+were played for participants from three affect categories in order to
+increase generalizability. Those in the control condition saw one of two
+clips from Blue, a typical car ride or a man shuffling papers around in
+an office. The two clips intending to elicit primarily fear were from
+the Shining (i.e., the protagonists are escaping an axe murderer) and
+the Blair Witch Project (i.e., the protagonists are frantically
+searching through a house in the dark), while the clips intending to
+elicit primarily anger were from Seven (i.e., a serial killer torments a
+cop by murdering his wife) and Schindler's List (i.e., a Nazi murders in
+a concentration camp).\\
+\textbf{Issue and policy.} The participants read a short speech about
+the prevalence of homelessness in the United States (see Appendix A).
+The speech presented facts about the increasing number of homeless
+people in the country, reasoning that the problem is important and worth
+addressing. The participants also read a policy addressing homelessness
+(see Appendix A). The policy was either complex or simple, and either
+conservative or liberal leaning. The complex policies were comprised of
+simple policies, such that a liberal, complex policy proposed three
+simple policies that would be implemented concurrently. Half of the
+policies were taken from prominent liberal websites and half were taken
+from prominent conservative websites.\\
+\textbf{Policy and issue judgments.} Participants rated ten items on a
+scale of 1 = \enquote{strongly disagree} to 7 = \enquote{strongly
+agree.} The items were judgments about the policy, such as \enquote{The
+policy will solve the problem,} and judgments about the issue itself,
+such as \enquote{Homelessness is an important issue} (see Appendix B).
+The items mainly covered varying facets of policy beliefs, including if
+the policy was good, reasonable, possible, effective, and moral.\\
+\textbf{Individual difference measures.} Participants filled out several
+individual difference surveys. An adjusted Positive and Negative Affect
+Schedule (Watson, Clark, \& Tellegen, 1988) measured the extent to which
+participants felt interested, distressed, afraid, guilty, angry,
+disgusted, happy, sad, anxious, calm, surprised, and upset. The 12-point
+Social and Economic Conservatism Scale (Everett, 2013) measured the
+extent to which participants felt positively about conservative issues,
+such as gun ownership or limited government. The 10-item Personality
+Inventory (Gosling, Rentfrow, \& Swann, 2003) measured the personality
+traits extraversion, agreeableness, conscientiousness, emotional
+stability, and openness to experiences. The 18-point Need for Cognition
+Scale (Cacioppo, Petty, \& Kao, 1984) measured the tendency and
+enthusiasm for thinking complexly and abstractly. And last, the 10-point
+Emotional Regulation Questionnaire (Gross \& John, 2003) measured the
+propensity to regulate emotions through cognitive reappraisal and
+expressive suppression techniques. Gender, age, ethnicity, political
+orientation, and political affiliation were also collected. \#\#
+Procedure Participants were redirected to complete the online survey
+through the Amazon Mechanical Turk website. Two thirds of participants
+were randomly assigned to watch an emotionally evocative film clip, and
+the remaining third were randomly assigned to the control condition,
+where they watched a neutral film clip. The emotionally evocative clips
+had been reliability found to induce predominantly fear or predominantly
+anger. After watching a film clip, participants read a short speech
+about the prevalance of homelessness in the United States. Then,
+participants were randomly assigned to read a policy addressing
+homelessness that was either simple or complex, or conservative or
+liberal. Then, participants judged the issue and policy on different but
+related items. Finally, participants filled out a series of surveys
+evaluating their current emotional state, conservativeness, personality
+traits, need for cognition, emotional regulation, and demographics.
+
+\section{Results}\label{results}
+
+We used R (Version 3.6.1; R Core Team, 2019) and the R-packages
+\emph{dplyr} (Version 0.8.3; Wickham, François, Henry, \& Müller, 2019),
+\emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{ggplot2} (Version
+3.2.1; Wickham, 2016), \emph{here} (Version 0.1; Müller, 2017),
+\emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{purrr}
+(Version 0.3.3; Henry \& Wickham, 2019), \emph{readr} (Version 1.3.1;
+Wickham, Hester, \& Francois, 2018), \emph{rio} (Version 0.5.16; C.-h.
+Chan, Chan, Leeper, \& Becker, 2018), \emph{stringr} (Version 1.4.0;
+Wickham, 2019b), \emph{tibble} (Version 2.1.3; Müller \& Wickham, 2019),
+\emph{tidyr} (Version 1.0.0; Wickham \& Henry, 2019), and
+\emph{tidyverse} (Version 1.2.1; Wickham, 2017) for all our analyses.
+
+\section{Discussion}\label{discussion}
+
+\newpage
+
+\section{References}\label{references}
+
+\begingroup
+\setlength{\parindent}{-0.5in} \setlength{\leftskip}{0.5in}
+
+\hypertarget{refs}{}
+\hypertarget{ref-R-papaja}{}
+Aust, F., \& Barth, M. (2018). \emph{papaja: Create APA manuscripts with
+R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
+
+\hypertarget{ref-R-rio}{}
+Chan, C.-h., Chan, G. C., Leeper, T. J., \& Becker, J. (2018).
+\emph{Rio: A swiss-army knife for data file i/o}.
+
+\hypertarget{ref-R-purrr}{}
+Henry, L., \& Wickham, H. (2019). \emph{Purrr: Functional programming
+tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
+
+\hypertarget{ref-R-here}{}
+Müller, K. (2017). \emph{Here: A simpler way to find your files}.
+Retrieved from \url{https://CRAN.R-project.org/package=here}
+
+\hypertarget{ref-R-tibble}{}
+Müller, K., \& Wickham, H. (2019). \emph{Tibble: Simple data frames}.
+Retrieved from \url{https://CRAN.R-project.org/package=tibble}
+
+\hypertarget{ref-R-base}{}
+R Core Team. (2019). \emph{R: A language and environment for statistical
+computing}. Vienna, Austria: R Foundation for Statistical Computing.
+Retrieved from \url{https://www.R-project.org/}
+
+\hypertarget{ref-R-ggplot2}{}
+Wickham, H. (2016). \emph{Ggplot2: Elegant graphics for data analysis}.
+Springer-Verlag New York. Retrieved from
+\url{https://ggplot2.tidyverse.org}
+
+\hypertarget{ref-R-tidyverse}{}
+Wickham, H. (2017). \emph{Tidyverse: Easily install and load the
+'tidyverse'}. Retrieved from
+\url{https://CRAN.R-project.org/package=tidyverse}
+
+\hypertarget{ref-R-forcats}{}
+Wickham, H. (2019a). \emph{Forcats: Tools for working with categorical
+variables (factors)}. Retrieved from
+\url{https://CRAN.R-project.org/package=forcats}
+
+\hypertarget{ref-R-stringr}{}
+Wickham, H. (2019b). \emph{Stringr: Simple, consistent wrappers for
+common string operations}. Retrieved from
+\url{https://CRAN.R-project.org/package=stringr}
+
+\hypertarget{ref-R-tidyr}{}
+Wickham, H., \& Henry, L. (2019). \emph{Tidyr: Tidy messy data}.
+Retrieved from \url{https://CRAN.R-project.org/package=tidyr}
+
+\hypertarget{ref-R-dplyr}{}
+Wickham, H., François, R., Henry, L., \& Müller, K. (2019). \emph{Dplyr:
+A grammar of data manipulation}. Retrieved from
+\url{https://CRAN.R-project.org/package=dplyr}
+
+\hypertarget{ref-R-readr}{}
+Wickham, H., Hester, J., \& Francois, R. (2018). \emph{Readr: Read
+rectangular text data}. Retrieved from
+\url{https://CRAN.R-project.org/package=readr}
+
+\endgroup
+
+
+\end{document}
