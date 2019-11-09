@@ -40,10 +40,6 @@ pca.var = psych::principal(observed.cor, rotate = "varimax", nfactors = 3, missi
 summary(pca.var)
 pca.var$loadings
 
-
-pca.pro <- principal(observed.cor, rotate = "promax", nfactors = 3, missing = TRUE)
-summary(pca.pro)
-pca.pro$loadings
 ```
 
 

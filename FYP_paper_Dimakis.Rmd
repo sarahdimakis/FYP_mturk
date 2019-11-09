@@ -16,7 +16,7 @@ abstract: |
   
   
   <!-- https://tinyurl.com/ybremelq -->
-bibliography      : ["r-references.bib"]
+bibliography      : references.bib
 floatsintext      : no
 figurelist        : no
 tablelist         : no
@@ -36,6 +36,7 @@ library("papaja")
 library("rio")
 library("here")
 library("tidyverse")
+library("stats")
 data <- import(here("data", "mturk_oct9.csv"), setclass = "tbl_df")
 
 ```
@@ -91,19 +92,63 @@ other_n <- table(data$Political_affiliation)[[2]]+
 other <- paste(((other_n/n) *100) %>% round(1), "%", sep = "")
 ```
 ## Participants
-Two-hundred U.S. adults were recruited via Amazon Mechanical Turk to participate in a study listed as “Psychology and society survey.” Participants were removed for completing the survey quicker than predetermined time cutoffs or failing to pass attention checks, leaving `r n` participants for analyses. Of the remaining `r n` participants, who were `r r1_age` to `r r2_age` years old (*M* = `r mean_age`, *SD* = `r sd_age`), `r female` identified as female and `r male` identified as male, while `r white` identified as White of Caucasian, `r black` as African American or Black, `r hispanic` as Hispanic or Latinx, `r asian` as Asian or Asian American, `r native` as Native American, and `r other` as “Other.” The sample leaned liberal, with `r democrat` affiliated with the Democratic Party, `r republican` affiliated with the Republican Party, and `r other` affiliated with the Green Party, Libertarian Party, or no party. The participants were compensated $1.50 for completing the survey, which took on average less than 12 minutes.  
+Two-hundred U.S. adults were recruited via Amazon Mechanical Turk to participate in a study listed as "Psychology and society survey." Participants were removed for completing the survey quicker than predetermined time cutoffs or failing to pass attention checks, leaving `r n` participants for analyses. Of the remaining `r n` participants, who were `r r1_age` to `r r2_age` years old (*M* = `r mean_age`, *SD* = `r sd_age`), `r female` identified as female and `r male` identified as male, while `r white` identified as White of Caucasian, `r black` as African American or Black, `r hispanic` as Hispanic or Latinx, `r asian` as Asian or Asian American, `r native` as Native American, and `r other` as "Other." The sample leaned liberal, with `r democrat` affiliated with the Democratic Party, `r republican` affiliated with the Republican Party, and `r other` affiliated with the Green Party, Libertarian Party, or no party. The participants were compensated $1.50 for completing the survey, which took on average less than 12 minutes.  
 
 ## Materials  
-**Emotion induction.** Affect was induced incidentally through video clips (Schaefer, Nils, Sanchex, & Philippot, 2010). Six videos were played for participants from three affect categories  in order to increase generalizability. Those in the control condition saw one of two clips from Blue, a typical car ride or a man shuffling papers around in an office. The two clips intending to elicit primarily fear were from the Shining (i.e., the protagonists are escaping an axe murderer) and the Blair Witch Project (i.e., the protagonists are frantically searching through a house in the dark), while the clips intending to elicit primarily anger were from Seven (i.e., a serial killer torments a cop by murdering his wife) and Schindler’s List (i.e., a Nazi murders in a concentration camp).  
+**Emotion induction.** Affect was induced incidentally through video clips [@schaefer2010]. Six videos were played for participants from three affect categories  in order to increase generalizability. Those in the control condition saw one of two clips from Blue, a typical car ride or a man shuffling papers around in an office. The two clips intending to elicit primarily fear were from the Shining (i.e., the protagonists are escaping an axe murderer) and the Blair Witch Project (i.e., the protagonists are frantically searching through a house in the dark), while the clips intending to elicit primarily anger were from Seven (i.e., a serial killer torments a cop by murdering his wife) and Schindler's List (i.e., a Nazi murders in a concentration camp).  
+
 **Issue and policy.** The participants read a short speech about the prevalence of homelessness in the United States (see Appendix A). The speech presented facts about the increasing number of homeless people in the country, reasoning that the problem is important and worth addressing. The participants also read a policy addressing homelessness (see Appendix A). The policy was either complex or simple, and either conservative or liberal leaning. The complex policies were comprised of simple policies, such that a liberal, complex policy proposed three simple policies that would be implemented concurrently. Half of the policies were taken from prominent liberal websites and half were taken from prominent conservative websites.  
-**Policy and issue judgments.** Participants rated ten items on a scale of 1 = “strongly disagree” to 7 = “strongly agree.” The items were judgments about the policy, such as “The policy will solve the problem,” and judgments about the issue itself, such as “Homelessness is an important issue” (see Appendix B). The items mainly covered varying facets of policy beliefs, including if the policy was good, reasonable, possible, effective, and moral.  
-**Individual difference measures.** Participants filled out several individual difference surveys. An adjusted Positive and Negative Affect Schedule (Watson, Clark, & Tellegen, 1988) measured the extent to which participants felt interested, distressed, afraid, guilty, angry, disgusted, happy, sad, anxious, calm, surprised, and upset. The 12-point Social and Economic Conservatism Scale (Everett, 2013) measured the extent to which participants felt positively about conservative issues, such as gun ownership or limited government. The 10-item Personality Inventory (Gosling, Rentfrow, & Swann, 2003) measured the personality traits extraversion, agreeableness, conscientiousness, emotional stability, and openness to experiences. The 18-point Need for Cognition Scale (Cacioppo, Petty, & Kao, 1984) measured the tendency and enthusiasm for thinking complexly and abstractly. And last, the 10-point Emotional Regulation Questionnaire (Gross & John, 2003) measured the propensity to regulate emotions through cognitive reappraisal and expressive suppression techniques. Gender, age, ethnicity, political orientation, and political affiliation were also collected.
+
+**Policy and issue judgments.** Participants rated ten items on a scale of 1 = strongly disagree to 7 = strongly agree. The items were judgments about the policy, such as "The policy will solve the problem", and judgments about the issue itself, such as "Homelessness is an important issue" (see Appendix B). The items mainly covered varying facets of policy beliefs, including if the policy was good, reasonable, possible, effective, and moral.  
+
+**Individual difference measures.** Participants filled out several individual difference surveys. An adjusted Positive and Negative Affect Schedule [@watson1988] measured the extent to which participants felt interested, distressed, afraid, guilty, angry, disgusted, happy, sad, anxious, calm, surprised, and upset. The 12-point Social and Economic Conservatism Scale [@everett2013] measured the extent to which participants felt positively about conservative issues, such as gun ownership or limited government. The 10-item Personality Inventory [@gosling2003] measured the personality traits extraversion, agreeableness, conscientiousness, emotional stability, and openness to experiences. The 18-point Need for Cognition Scale [@cacioppo1984] measured the tendency and enthusiasm for thinking complexly and abstractly. And last, the 10-point Emotional Regulation Questionnaire [@gross2003] measured the propensity to regulate emotions through cognitive reappraisal and expressive suppression techniques. Gender, age, ethnicity, political orientation, and political affiliation were also collected.  
+
 ## Procedure
-Participants were redirected to complete the online survey through the Amazon Mechanical Turk website. Two thirds of participants were randomly assigned to watch an emotionally evocative film clip, and the remaining third were randomly assigned to the control condition, where they watched a neutral film clip. The emotionally evocative clips had been reliability found to induce predominantly fear or predominantly anger. After watching a film clip, participants read a short speech about the prevalance of homelessness in the United States. Then, participants were randomly assigned to read a policy addressing homelessness that was either simple or complex, or conservative or liberal. Then, participants judged the issue and policy on different but related items. Finally, participants filled out a series of surveys evaluating their current emotional state, conservativeness, personality traits, need for cognition, emotional regulation, and demographics.  
+Participants were redirected to complete the online survey through the Amazon Mechanical Turk website. Two thirds of participants were randomly assigned to watch an emotionally evocative film clip, and the remaining third were randomly assigned to the control condition, where they watched a neutral film clip. The emotionally evocative clips had been reliability found to induce predominantly fear or predominantly anger. After watching a film clip, participants read a short speech about the prevalence of homelessness in the United States. Then, participants were randomly assigned to read a policy addressing homelessness that was either simple or complex, or conservative or liberal. Then, participants judged the issue and policy on different but related items. Finally, participants filled out a series of surveys evaluating their current emotional state, conservativeness, personality traits, need for cognition, emotional regulation, and demographics.  
 
 # Results
-We used `r cite_r("r-references.bib")` for all our analyses.
+```{r}
+emotions <- data %>% select(c(Interested, Distressed, Afraid, Guilty, Angry, 
+                               Disgusted, Happy, Sad, Anxious, Calm, Surprised, Upset))
 
+observed.cor <- data.frame(cor(emotions, use = "pairwise.complete.obs"))
+
+pca.var <- psych::principal(observed.cor, rotate = "varimax", nfactors = 3, missing = TRUE, scores = TRUE)
+
+load <- loadings(pca.var)
+
+loadings <- cbind(load[,1],load[,2],load[,3]) %>% round(2)
+
+colnames(loadings) <- c("Component 1", "Component 2", "Component 3")
+
+
+loadings %>% as.data.frame() %>% knitr::kable(format = "pandoc")
+
+loadings <- loadings %>%
+  as.data.frame()  %>%
+  mutate(`  ` = c("Interested", "Distressed", "Afraid", "Guilty", "Angry", "Disgusted",
+                "Happy", "Sad", "Anxious", "Calm", "Surprised", "Upset"))
+
+loadings <- loadings[, c(4, 1, 2, 3)]
+
+loadings %>% mutate(
+         `Component 1` = kableExtra::cell_spec(`Component 1`,
+                                               bold = ifelse(`Component 1` > .5, TRUE, FALSE)),
+         `Component 2` = kableExtra::cell_spec(`Component 2`,
+                                               bold = ifelse(`Component 2` > .5, TRUE, FALSE)),
+         `Component 3` = kableExtra::cell_spec(`Component 3`,
+                                               bold = ifelse(`Component 3` > .5, TRUE, FALSE))) %>%
+  knitr::kable(format= "pandoc")
+  
+  
+```
+
+
+
+Emotion factors
+
+We ran principal components on the emotions in 
+Manipulation check
 
 # Discussion
 

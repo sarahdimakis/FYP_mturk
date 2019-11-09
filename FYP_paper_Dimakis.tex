@@ -23,11 +23,12 @@
 }{}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={The different effect of anger and fear on political judgments},
+            pdftitle={The differential effect of anger and fear on political judgments},
             pdfauthor={Sarah Dimakis},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -62,7 +63,7 @@
 \def\footnote{\protect\rmarkdownfootnote}
 
 
-  \title{The different effect of anger and fear on political judgments}
+  \title{The differential effect of anger and fear on political judgments}
     \author{Sarah Dimakis\textsuperscript{1}}
     \date{}
   
@@ -135,7 +136,7 @@ than 12 minutes.
 \subsection{Materials}\label{materials}
 
 \textbf{Emotion induction.} Affect was induced incidentally through
-video clips (Schaefer, Nils, Sanchex, \& Philippot, 2010). Six videos
+video clips (Schaefer, Nils, Sanchez, \& Philippot, 2010). Six videos
 were played for participants from three affect categories in order to
 increase generalizability. Those in the control condition saw one of two
 clips from Blue, a typical car ride or a man shuffling papers around in
@@ -145,7 +146,8 @@ the Blair Witch Project (i.e., the protagonists are frantically
 searching through a house in the dark), while the clips intending to
 elicit primarily anger were from Seven (i.e., a serial killer torments a
 cop by murdering his wife) and Schindler's List (i.e., a Nazi murders in
-a concentration camp).\\
+a concentration camp).
+
 \textbf{Issue and policy.} The participants read a short speech about
 the prevalence of homelessness in the United States (see Appendix A).
 The speech presented facts about the increasing number of homeless
@@ -156,14 +158,16 @@ conservative or liberal leaning. The complex policies were comprised of
 simple policies, such that a liberal, complex policy proposed three
 simple policies that would be implemented concurrently. Half of the
 policies were taken from prominent liberal websites and half were taken
-from prominent conservative websites.\\
+from prominent conservative websites.
+
 \textbf{Policy and issue judgments.} Participants rated ten items on a
-scale of 1 = \enquote{strongly disagree} to 7 = \enquote{strongly
-agree.} The items were judgments about the policy, such as \enquote{The
-policy will solve the problem,} and judgments about the issue itself,
-such as \enquote{Homelessness is an important issue} (see Appendix B).
-The items mainly covered varying facets of policy beliefs, including if
-the policy was good, reasonable, possible, effective, and moral.\\
+scale of 1 = strongly disagree to 7 = strongly agree. The items were
+judgments about the policy, such as \enquote{The policy will solve the
+problem}, and judgments about the issue itself, such as
+\enquote{Homelessness is an important issue} (see Appendix B). The items
+mainly covered varying facets of policy beliefs, including if the policy
+was good, reasonable, possible, effective, and moral.
+
 \textbf{Individual difference measures.} Participants filled out several
 individual difference surveys. An adjusted Positive and Negative Affect
 Schedule (Watson, Clark, \& Tellegen, 1988) measured the extent to which
@@ -172,43 +176,79 @@ disgusted, happy, sad, anxious, calm, surprised, and upset. The 12-point
 Social and Economic Conservatism Scale (Everett, 2013) measured the
 extent to which participants felt positively about conservative issues,
 such as gun ownership or limited government. The 10-item Personality
-Inventory (Gosling, Rentfrow, \& Swann, 2003) measured the personality
-traits extraversion, agreeableness, conscientiousness, emotional
-stability, and openness to experiences. The 18-point Need for Cognition
-Scale (Cacioppo, Petty, \& Kao, 1984) measured the tendency and
-enthusiasm for thinking complexly and abstractly. And last, the 10-point
-Emotional Regulation Questionnaire (Gross \& John, 2003) measured the
-propensity to regulate emotions through cognitive reappraisal and
-expressive suppression techniques. Gender, age, ethnicity, political
-orientation, and political affiliation were also collected. \#\#
-Procedure Participants were redirected to complete the online survey
-through the Amazon Mechanical Turk website. Two thirds of participants
-were randomly assigned to watch an emotionally evocative film clip, and
-the remaining third were randomly assigned to the control condition,
-where they watched a neutral film clip. The emotionally evocative clips
-had been reliability found to induce predominantly fear or predominantly
-anger. After watching a film clip, participants read a short speech
-about the prevalance of homelessness in the United States. Then,
-participants were randomly assigned to read a policy addressing
-homelessness that was either simple or complex, or conservative or
-liberal. Then, participants judged the issue and policy on different but
-related items. Finally, participants filled out a series of surveys
-evaluating their current emotional state, conservativeness, personality
-traits, need for cognition, emotional regulation, and demographics.
+Inventory (Gosling, Rentfrow, \& Swann Jr, 2003) measured the
+personality traits extraversion, agreeableness, conscientiousness,
+emotional stability, and openness to experiences. The 18-point Need for
+Cognition Scale (Cacioppo, Petty, \& Feng Kao, 1984) measured the
+tendency and enthusiasm for thinking complexly and abstractly. And last,
+the 10-point Emotional Regulation Questionnaire (Gross \& John, 2003)
+measured the propensity to regulate emotions through cognitive
+reappraisal and expressive suppression techniques. Gender, age,
+ethnicity, political orientation, and political affiliation were also
+collected.
+
+\subsection{Procedure}\label{procedure}
+
+Participants were redirected to complete the online survey through the
+Amazon Mechanical Turk website. Two thirds of participants were randomly
+assigned to watch an emotionally evocative film clip, and the remaining
+third were randomly assigned to the control condition, where they
+watched a neutral film clip. The emotionally evocative clips had been
+reliability found to induce predominantly fear or predominantly anger.
+After watching a film clip, participants read a short speech about the
+prevalence of homelessness in the United States. Then, participants were
+randomly assigned to read a policy addressing homelessness that was
+either simple or complex, or conservative or liberal. Then, participants
+judged the issue and policy on different but related items. Finally,
+participants filled out a series of surveys evaluating their current
+emotional state, conservativeness, personality traits, need for
+cognition, emotional regulation, and demographics.
 
 \section{Results}\label{results}
 
-We used R (Version 3.6.1; R Core Team, 2019) and the R-packages
-\emph{dplyr} (Version 0.8.3; Wickham, François, Henry, \& Müller, 2019),
-\emph{forcats} (Version 0.4.0; Wickham, 2019a), \emph{ggplot2} (Version
-3.2.1; Wickham, 2016), \emph{here} (Version 0.1; Müller, 2017),
-\emph{papaja} (Version 0.1.0.9842; Aust \& Barth, 2018), \emph{purrr}
-(Version 0.3.3; Henry \& Wickham, 2019), \emph{readr} (Version 1.3.1;
-Wickham, Hester, \& Francois, 2018), \emph{rio} (Version 0.5.16; C.-h.
-Chan, Chan, Leeper, \& Becker, 2018), \emph{stringr} (Version 1.4.0;
-Wickham, 2019b), \emph{tibble} (Version 2.1.3; Müller \& Wickham, 2019),
-\emph{tidyr} (Version 1.0.0; Wickham \& Henry, 2019), and
-\emph{tidyverse} (Version 1.2.1; Wickham, 2017) for all our analyses.
+\begin{longtable}[]{@{}lrrr@{}}
+\toprule
+& Component 1 & Component 2 & Component 3\tabularnewline
+\midrule
+\endhead
+Interested & 0.15 & -0.10 & 0.84\tabularnewline
+Distressed & 0.49 & 0.64 & -0.20\tabularnewline
+Afraid & 0.44 & 0.66 & -0.14\tabularnewline
+Guilty & 0.70 & 0.20 & -0.02\tabularnewline
+Angry & 0.82 & 0.16 & -0.13\tabularnewline
+Disgusted & 0.79 & 0.20 & -0.18\tabularnewline
+Happy & -0.40 & 0.12 & 0.79\tabularnewline
+Sad & 0.80 & 0.29 & -0.06\tabularnewline
+Anxious & 0.36 & 0.78 & -0.19\tabularnewline
+Calm & -0.26 & -0.38 & 0.69\tabularnewline
+Surprised & 0.07 & 0.75 & 0.04\tabularnewline
+Upset & 0.81 & 0.36 & -0.13\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+& Component 1 & Component 2 & Component 3\tabularnewline
+\midrule
+\endhead
+Interested & 0.15 & -0.1 & \textbf{0.84}\tabularnewline
+Distressed & 0.49 & \textbf{0.64} & -0.2\tabularnewline
+Afraid & 0.44 & \textbf{0.66} & -0.14\tabularnewline
+Guilty & \textbf{0.7} & 0.2 & -0.02\tabularnewline
+Angry & \textbf{0.82} & 0.16 & -0.13\tabularnewline
+Disgusted & \textbf{0.79} & 0.2 & -0.18\tabularnewline
+Happy & -0.4 & 0.12 & \textbf{0.79}\tabularnewline
+Sad & \textbf{0.8} & 0.29 & -0.06\tabularnewline
+Anxious & 0.36 & \textbf{0.78} & -0.19\tabularnewline
+Calm & -0.26 & -0.38 & \textbf{0.69}\tabularnewline
+Surprised & 0.07 & \textbf{0.75} & 0.04\tabularnewline
+Upset & \textbf{0.81} & 0.36 & -0.13\tabularnewline
+\bottomrule
+\end{longtable}
+
+Emotion factors
+
+We ran principal components on the emotions in Manipulation check
 
 \section{Discussion}\label{discussion}
 
@@ -220,64 +260,37 @@ Wickham, 2019b), \emph{tibble} (Version 2.1.3; Müller \& Wickham, 2019),
 \setlength{\parindent}{-0.5in} \setlength{\leftskip}{0.5in}
 
 \hypertarget{refs}{}
-\hypertarget{ref-R-papaja}{}
-Aust, F., \& Barth, M. (2018). \emph{papaja: Create APA manuscripts with
-R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
+\hypertarget{ref-cacioppo1984}{}
+Cacioppo, J. T., Petty, R. E., \& Feng Kao, C. (1984). The efficient
+assessment of need for cognition. \emph{Journal of Personality
+Assessment}, \emph{48}(3), 306--307.
 
-\hypertarget{ref-R-rio}{}
-Chan, C.-h., Chan, G. C., Leeper, T. J., \& Becker, J. (2018).
-\emph{Rio: A swiss-army knife for data file i/o}.
+\hypertarget{ref-everett2013}{}
+Everett, J. A. (2013). The 12 item social and economic conservatism
+scale (secs). \emph{PloS One}, \emph{8}(12), e82131.
 
-\hypertarget{ref-R-purrr}{}
-Henry, L., \& Wickham, H. (2019). \emph{Purrr: Functional programming
-tools}. Retrieved from \url{https://CRAN.R-project.org/package=purrr}
+\hypertarget{ref-gosling2003}{}
+Gosling, S. D., Rentfrow, P. J., \& Swann Jr, W. B. (2003). A very brief
+measure of the big-five personality domains. \emph{Journal of Research
+in Personality}, \emph{37}(6), 504--528.
 
-\hypertarget{ref-R-here}{}
-Müller, K. (2017). \emph{Here: A simpler way to find your files}.
-Retrieved from \url{https://CRAN.R-project.org/package=here}
+\hypertarget{ref-gross2003}{}
+Gross, J. J., \& John, O. P. (2003). Individual differences in two
+emotion regulation processes: Implications for affect, relationships,
+and well-being. \emph{Journal of Personality and Social Psychology},
+\emph{85}(2), 348.
 
-\hypertarget{ref-R-tibble}{}
-Müller, K., \& Wickham, H. (2019). \emph{Tibble: Simple data frames}.
-Retrieved from \url{https://CRAN.R-project.org/package=tibble}
+\hypertarget{ref-schaefer2010}{}
+Schaefer, A., Nils, F., Sanchez, X., \& Philippot, P. (2010). Assessing
+the effectiveness of a large database of emotion-eliciting films: A new
+tool for emotion researchers. \emph{Cognition and Emotion},
+\emph{24}(7), 1153--1172.
 
-\hypertarget{ref-R-base}{}
-R Core Team. (2019). \emph{R: A language and environment for statistical
-computing}. Vienna, Austria: R Foundation for Statistical Computing.
-Retrieved from \url{https://www.R-project.org/}
-
-\hypertarget{ref-R-ggplot2}{}
-Wickham, H. (2016). \emph{Ggplot2: Elegant graphics for data analysis}.
-Springer-Verlag New York. Retrieved from
-\url{https://ggplot2.tidyverse.org}
-
-\hypertarget{ref-R-tidyverse}{}
-Wickham, H. (2017). \emph{Tidyverse: Easily install and load the
-'tidyverse'}. Retrieved from
-\url{https://CRAN.R-project.org/package=tidyverse}
-
-\hypertarget{ref-R-forcats}{}
-Wickham, H. (2019a). \emph{Forcats: Tools for working with categorical
-variables (factors)}. Retrieved from
-\url{https://CRAN.R-project.org/package=forcats}
-
-\hypertarget{ref-R-stringr}{}
-Wickham, H. (2019b). \emph{Stringr: Simple, consistent wrappers for
-common string operations}. Retrieved from
-\url{https://CRAN.R-project.org/package=stringr}
-
-\hypertarget{ref-R-tidyr}{}
-Wickham, H., \& Henry, L. (2019). \emph{Tidyr: Tidy messy data}.
-Retrieved from \url{https://CRAN.R-project.org/package=tidyr}
-
-\hypertarget{ref-R-dplyr}{}
-Wickham, H., François, R., Henry, L., \& Müller, K. (2019). \emph{Dplyr:
-A grammar of data manipulation}. Retrieved from
-\url{https://CRAN.R-project.org/package=dplyr}
-
-\hypertarget{ref-R-readr}{}
-Wickham, H., Hester, J., \& Francois, R. (2018). \emph{Readr: Read
-rectangular text data}. Retrieved from
-\url{https://CRAN.R-project.org/package=readr}
+\hypertarget{ref-watson1988}{}
+Watson, D., Clark, L. A., \& Tellegen, A. (1988). Development and
+validation of brief measures of positive and negative affect: The panas
+scales. \emph{Journal of Personality and Social Psychology},
+\emph{54}(6), 1063.
 
 \endgroup
 
